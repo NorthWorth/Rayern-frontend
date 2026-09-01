@@ -1,0 +1,341 @@
+.page {
+  display: grid;
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.profileHero,
+.section,
+.dangerZone {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.profileHero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.identityCopy {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.identityCopy h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.35rem;
+}
+
+.identityCopy p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.accountBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.section {
+  display: grid;
+  gap: 24px;
+  padding: 26px;
+  border-radius: var(--radius-lg);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.sectionHeader h2 {
+  margin: 6px 0 5px;
+  color: var(--text-primary);
+  font-size: 1.15rem;
+}
+
+.sectionHeader p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  font-size: 0.88rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field label {
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+  outline: none;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.field input::placeholder {
+  color: #94a3b8;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.securityList {
+  display: grid;
+  gap: 12px;
+}
+
+.securityItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-muted);
+}
+
+.securityItem > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.securityItem strong {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.securityItem span {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.verifiedBadge,
+.currentSession {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534 !important;
+  font-size: 0.72rem !important;
+  font-weight: 800;
+}
+
+.sessionCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-muted);
+}
+
+.sessionIcon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #eef2ff;
+  font-size: 1.1rem;
+}
+
+.sessionInfo {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.sessionInfo strong {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+}
+
+.sessionInfo span,
+.sessionInfo small {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+.dangerZone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+  border-color: rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+.dangerZone h2 {
+  margin: 6px 0;
+  color: #991b1b;
+  font-size: 1rem;
+}
+
+.dangerZone p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.dangerButton {
+  flex-shrink: 0;
+  padding: 11px 16px;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  background: #fff;
+  color: #b91c1c;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dangerButton:hover {
+  background: #fef2f2;
+}
+
+@media (max-width: 760px) {
+  .profileHero,
+  .dangerZone {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .accountBadge {
+    align-self: flex-start;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formActions {
+    justify-content: stretch;
+  }
+
+  .formActions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    gap: 14px;
+  }
+
+  .profileHero,
+  .section,
+  .dangerZone {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .identity {
+    align-items: flex-start;
+  }
+
+  .securityItem {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .securityItem button,
+  .securityItem .verifiedBadge {
+    align-self: stretch;
+  }
+
+  .sessionCard {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .currentSession {
+    margin-left: 56px;
+  }
+}

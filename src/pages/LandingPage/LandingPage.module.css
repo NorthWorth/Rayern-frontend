@@ -1,0 +1,38 @@
+.page {
+  --lp-primary: #312e81;
+  --lp-primary-soft: #4f46e5;
+  --lp-primary-tint: #eeedfb;
+  --lp-ink: #101322;
+  --lp-body: #4b5268;
+  --lp-muted: #7a8095;
+  --lp-border: rgba(49, 46, 129, 0.12);
+  --lp-surface: #ffffff;
+  --lp-bg-soft: #f7f7fc;
+  --lp-radius-lg: 22px;
+  --lp-radius-md: 16px;
+  --lp-shadow-soft: 0 24px 64px rgba(23, 20, 74, 0.1);
+  --lp-shadow-lift: 0 14px 34px rgba(23, 20, 74, 0.12);
+
+  min-height: 100vh;
+  background: var(--lp-surface);
+  color: var(--lp-ink);
+  font-family: inherit;
+}
+
+.page :global(html) {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .page :global(html) {
+    scroll-behavior: auto;
+  }
+}

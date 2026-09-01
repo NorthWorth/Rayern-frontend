@@ -1,0 +1,112 @@
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.required {
+  color: #dc2626;
+}
+
+.inputWrap {
+  display: block;
+}
+
+.inputWrapWithIcon {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.inputWrapWithIcon .input {
+  padding-left: 36px;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 11px 12px;
+  font: inherit;
+  color: var(--text-primary);
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus,
+.tagInput:focus-within {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+}
+
+.inputError {
+  border-color: #dc2626;
+}
+
+.errorText {
+  color: #b91c1c;
+  font-size: 0.82rem;
+}
+
+.textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.tagInput {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 12px;
+  padding: 8px;
+  background: var(--surface);
+}
+
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.tagChip button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+}
+
+.tagInput input {
+  border: 0;
+  padding: 4px 6px;
+  min-width: 100px;
+  background: transparent;
+  flex: 1;
+}
+
+.tagInput input:focus {
+  outline: none;
+}

@@ -1,0 +1,126 @@
+.section {
+  background: #ffffff;
+}
+
+.inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 104px 32px;
+}
+
+.head {
+  max-width: 620px;
+  margin: 0 auto 52px;
+  text-align: center;
+}
+
+.eyebrow {
+  color: var(--lp-primary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 14px 0 0;
+  font-size: clamp(1.8rem, 3.4vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  color: var(--lp-ink);
+  text-wrap: balance;
+}
+
+.subtitle {
+  margin: 16px 0 0;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--lp-body);
+}
+
+.frame {
+  max-width: 1020px;
+  margin: 0 auto;
+  border: 1px solid rgba(49, 46, 129, 0.14);
+  border-radius: var(--lp-radius-lg);
+  background: #ffffff;
+  box-shadow: var(--lp-shadow-soft);
+  overflow: hidden;
+}
+
+.frameBar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(49, 46, 129, 0.08);
+  background: #fafafd;
+}
+
+.frameDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(49, 46, 129, 0.16);
+}
+
+.screenshot {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.highlights {
+  max-width: 1020px;
+  margin: 28px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.highlight {
+  padding: 22px 24px;
+  border: 1px solid rgba(49, 46, 129, 0.1);
+  border-radius: var(--lp-radius-md);
+  background: var(--lp-bg-soft);
+}
+
+.highlightTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 750;
+  color: var(--lp-primary);
+}
+
+.highlightText {
+  margin: 8px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--lp-body);
+}
+
+@media (max-width: 960px) {
+  .inner {
+    padding: 80px 24px;
+  }
+
+  .highlights {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+  }
+
+  .head {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 560px) {
+  .inner {
+    padding: 64px 20px;
+  }
+
+  .frameBar {
+    padding: 10px 14px;
+  }
+}

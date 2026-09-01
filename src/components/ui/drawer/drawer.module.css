@@ -1,0 +1,78 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(6px);
+  /* Above the responsive app-shell chrome
+     (sidebar 1200 / hamburger 1300) so open
+     drawers always cover the mobile sidebar. */
+  z-index: 1400;
+}
+
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(520px, 100%);
+  height: 100%;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  animation: slide-in 200ms ease-out;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.kicker {
+  margin: 0 0 4px;
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.closeButton {
+  border: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: var(--primary-strong);
+  cursor: pointer;
+}
+
+.content {
+  padding: 24px;
+  overflow: auto;
+}
+
+.footer {
+  padding: 0 24px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(18px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,37 @@
+.menu {
+  position: absolute;
+  min-width: 168px;
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  z-index: 20;
+}
+
+.right {
+  right: 0;
+}
+
+.left {
+  left: 0;
+}
+
+.item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.item:hover,
+.item:focus-visible {
+  background: #eef2ff;
+  outline: none;
+}

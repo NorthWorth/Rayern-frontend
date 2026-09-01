@@ -1,0 +1,258 @@
+.page {
+  display: grid;
+
+  gap: 20px;
+}
+
+/* Toolbar */
+
+.toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  flex-wrap: wrap;
+}
+
+.searchWrap,
+.filterWrap {
+  display: grid;
+
+  gap: 6px;
+}
+
+.searchWrap {
+  position: relative;
+  flex: 1 1 260px;
+}
+
+.searchIcon {
+  position: absolute;
+  bottom: 14px;
+  left: 13px;
+  color: var(--text-secondary, #64748b);
+  pointer-events: none;
+}
+
+.filterWrap {
+  min-width: 160px;
+}
+
+.searchWrap label,
+.filterWrap label {
+  color: var(--text-secondary, #64748b);
+
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.searchWrap input,
+.filterWrap select {
+  width: 100%;
+
+  padding: 10px 14px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  font-size: 0.9rem;
+}
+
+/* Keep clear of the leading search icon. */
+.searchWrap input {
+  padding-left: 38px;
+}
+
+.headerRow h2 {
+  margin: 4px 0 0;
+
+  font-size: 1.15rem;
+}
+
+/* List */
+
+.meetingList {
+  display: grid;
+
+  gap: 12px;
+}
+
+.meetingCard {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 16px 18px;
+
+  background: var(--surface-muted, #f8fafc);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.meetingCard:hover {
+  background: #ffffff;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.meetingDateBox strong {
+  color: #4f46e5;
+
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.meetingMain {
+  display: grid;
+
+  gap: 6px;
+
+  flex: 1 1 auto;
+
+  min-width: 0;
+}
+
+.meetingTitleRow {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+}
+
+.meetingTitleRow h3 {
+  margin: 0;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.meetingMeta {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin: 0;
+
+  color: var(--text-secondary, #64748b);
+
+  font-size: 0.82rem;
+}
+
+.meetingDescription {
+  margin: 0;
+
+  overflow: hidden;
+
+  color: var(--text-secondary, #64748b);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 0.82rem;
+}
+
+.meetingFooter {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  flex-wrap: wrap;
+
+  color: var(--text-secondary, #64748b);
+
+  font-size: 0.78rem;
+}
+
+.meetingFooter a {
+  color: #4f46e5;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.meetingFooter a:hover {
+  text-decoration: underline;
+}
+
+.deleteButton {
+  flex: 0 0 auto;
+}
+
+.emptyWrap {
+  padding: 12px 0;
+}
+
+.skeletonList {
+  display: grid;
+
+  gap: 12px;
+}
+
+.skeletonRow {
+  height: 84px;
+
+  background: linear-gradient(
+    90deg,
+    #eef2f7 25%,
+    #f8fafc 50%,
+    #eef2f7 75%
+  );
+  border-radius: 16px;
+
+  animation: skeletonPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.55; }
+  100% { opacity: 1; }
+}
+
+/* Form */
+
+.formGrid {
+  display: grid;
+
+  gap: 14px;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 720px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .meetingCard {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .deleteButton {
+    align-self: flex-end;
+    margin-top: -34px;
+  }
+}

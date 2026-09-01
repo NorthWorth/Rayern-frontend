@@ -1,0 +1,46 @@
+.avatar {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+.sm {
+  width: 32px;
+  height: 32px;
+  font-size: 0.7rem;
+}
+
+.md {
+  width: 40px;
+  height: 40px;
+  font-size: 0.8rem;
+}
+
+.lg {
+  width: 56px;
+  height: 56px;
+  font-size: 0.94rem;
+}
+
+.indigo {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.emerald {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.amber {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.slate {
+  background: #e2e8f0;
+  color: #334155;
+}

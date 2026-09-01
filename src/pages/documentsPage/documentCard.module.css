@@ -1,0 +1,63 @@
+.card {
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.preview {
+  border-radius: 14px;
+  min-height: 140px;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  display: grid;
+  place-items: center;
+}
+
+.previewBadge {
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 4px 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.body,
+.meta,
+.actions {
+  display: grid;
+  gap: 4px;
+}
+
+.body strong {
+  color: var(--text-primary);
+}
+
+.body p,
+.meta span {
+  color: var(--text-secondary);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.actions {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.actions button {
+  padding: 8px 10px;
+}
+
+@media (max-width: 640px) {
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}
