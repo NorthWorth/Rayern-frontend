@@ -1,5 +1,6 @@
 import Navbar from './components/Navbar/Navbar.jsx'
 import Hero from './components/Hero/Hero.jsx'
+import AboutRayern from './components/AboutRayern/AboutRayern.jsx'
 import Problem from './components/Problem/Problem.jsx'
 import Features from './components/Features/Features.jsx'
 import HowItWorks from './components/HowItWorks/HowItWorks.jsx'
@@ -17,6 +18,7 @@ export default function LandingPage() {
 
       <main>
         <Hero />
+        <AboutRayern />
         <Problem />
         <Features />
         <HowItWorks />

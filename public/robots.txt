@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /clients
+Disallow: /leads
+Disallow: /projects
+Disallow: /tasks
+Disallow: /meetings
+Disallow: /documents
+Disallow: /deliverables
+Disallow: /review/
+Disallow: /settings
+Disallow: /admin/
+
+Sitemap: https://app.rayern.com.ng/sitemap.xml

@@ -11,6 +11,23 @@
       name="description"
       content="Rayern is a client workspace for freelancers and agencies to manage clients, leads, projects, tasks, deliverables, documents, billing, and notifications in one place."
     />
+    <link rel="canonical" href="https://app.rayern.com.ng/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rayern" />
+    <meta property="og:title" content="Rayern | One Workspace for Client Work" />
+    <meta
+      property="og:description"
+      content="Rayern is a client-management workspace for freelancers, agencies, and consultants to organize the whole client journey in one place."
+    />
+    <meta property="og:url" content="https://app.rayern.com.ng/" />
+    <meta property="og:image" content="https://app.rayern.com.ng/brand/rayern-logo.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Rayern | One Workspace for Client Work" />
+    <meta
+      name="twitter:description"
+      content="Rayern is a client-management workspace for freelancers, agencies, and consultants to organize the whole client journey in one place."
+    />
+    <meta name="twitter:image" content="https://app.rayern.com.ng/brand/rayern-logo.png" />
     <meta name="theme-color" content="#4f46e5" />
 
     <meta name="mobile-web-app-capable" content="yes" />
@@ -20,7 +37,46 @@
 
     <link rel="manifest" href="/manifest.webmanifest" />
 
-    <title>Rayern</title>
+    <title>Rayern | One Workspace for Client Work</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://app.rayern.com.ng/#organization",
+            "name": "Rayern",
+            "url": "https://app.rayern.com.ng/",
+            "logo": "https://app.rayern.com.ng/brand/rayern-logo.png"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://app.rayern.com.ng/#website",
+            "url": "https://app.rayern.com.ng/",
+            "name": "Rayern",
+            "description": "A client-management workspace for freelancers, agencies, and consultants.",
+            "publisher": {
+              "@id": "https://app.rayern.com.ng/#organization"
+            }
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://app.rayern.com.ng/#software",
+            "name": "Rayern",
+            "url": "https://app.rayern.com.ng/",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "description": "A client-management workspace for freelancers, agencies, and consultants to manage leads, clients, projects, tasks, deliverables, meetings, documents, and notifications.",
+            "publisher": {
+              "@id": "https://app.rayern.com.ng/#organization"
+            },
+            "isPartOf": {
+              "@id": "https://app.rayern.com.ng/#website"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
