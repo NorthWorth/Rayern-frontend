@@ -14,6 +14,7 @@ const DeliverableContext = createContext(null)
 
 export function DeliverableProvider({
   children,
+  loadOnMount = true,
 }) {
   const { isAuthenticated } = useAuth()
 
@@ -84,8 +85,10 @@ export function DeliverableProvider({
   )
 
   useEffect(() => {
-    fetchDeliverables()
-  }, [fetchDeliverables])
+    if (loadOnMount) {
+      fetchDeliverables()
+    }
+  }, [fetchDeliverables, loadOnMount])
 
   const getDeliverable = useCallback(
     async (id) => {

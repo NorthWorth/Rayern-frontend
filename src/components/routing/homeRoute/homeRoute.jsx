@@ -1,6 +1,10 @@
+import { lazy, Suspense } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../../../context/authContext.jsx'
-import LandingPage from '../../../pages/LandingPage/LandingPage.jsx'
+
+const LandingPage = lazy(() =>
+  import('../../../pages/LandingPage/LandingPage.jsx'),
+)
 
 function HomeRoute() {
   const {
@@ -21,7 +25,11 @@ function HomeRoute() {
   }
 
   // Not authenticated → public landing page.
-  return <LandingPage />
+  return (
+    <Suspense fallback={null}>
+      <LandingPage />
+    </Suspense>
+  )
 }
 
 export default HomeRoute

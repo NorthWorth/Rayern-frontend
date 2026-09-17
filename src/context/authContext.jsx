@@ -5,7 +5,10 @@ import {
   useState,
 } from 'react'
 
-import api, { refreshAccessToken } from '../api/apiClient.js'
+import api, {
+  clearApiCache,
+  refreshAccessToken,
+} from '../api/apiClient.js'
 
 import {
   ACCESS_TOKEN_KEY,
@@ -332,6 +335,7 @@ export function AuthProvider({ children }) {
     }
 
     clearStoredSession()
+    clearApiCache()
 
     setUser(null)
     setWorkspace(null)

@@ -9,6 +9,9 @@ const API_URL =
   import.meta.env.VITE_API_URL ||
   'https://rayern-backend.onrender.com/api/v1'
 
+const GET_CACHE_TTL = 30 * 1000
+const getCache = new Map()
+
 // Move any pre-rebrand KlientBond storage
 // keys to their Rayern equivalents before
 // anything reads session state.
@@ -18,6 +21,37 @@ migrateLegacySessionKeys()
 // concurrent 401s trigger exactly ONE
 // /auth/refresh request.
 let refreshPromise = null
+
+function isCacheableGet(path, options, token) {
+  return (
+    Boolean(token) &&
+    options.method === 'GET' &&
+    options.cache !== false &&
+    !options.responseType &&
+    !path.startsWith('/auth/') &&
+    !path.startsWith('/public-review/')
+  )
+}
+
+function invalidateCache(path) {
+  const resource = path.split('?')[0]
+  const collection = `/${resource.split('/')[1]}`
+
+  for (const key of getCache.keys()) {
+    if (
+      key === resource ||
+      key.startsWith(`${resource}/`) ||
+      key === collection ||
+      key.startsWith(`${collection}/`)
+    ) {
+      getCache.delete(key)
+    }
+  }
+}
+
+export function clearApiCache() {
+  getCache.clear()
+}
 
 function setTokens(accessToken, refreshToken) {
   localStorage.setItem(
@@ -155,6 +189,7 @@ export function refreshAccessToken() {
         // request can retry the refresh.
         if (error.status === 401) {
           clearStoredSession()
+          clearApiCache()
 
           window.dispatchEvent(
             new CustomEvent(
@@ -180,6 +215,27 @@ async function request(
 ) {
   const token =
     localStorage.getItem(ACCESS_TOKEN_KEY)
+
+  const canUseCache = isCacheableGet(
+    path,
+    options,
+    token,
+  )
+
+  if (canUseCache) {
+    const cached = getCache.get(path)
+
+    if (
+      cached &&
+      Date.now() - cached.timestamp < GET_CACHE_TTL
+    ) {
+      return cached.data
+    }
+
+    if (cached) {
+      getCache.delete(path)
+    }
+  }
 
   const headers = {
     ...(options.body instanceof FormData ||
@@ -277,6 +333,15 @@ async function request(
 
   if (options.responseType === 'blob') {
     return blob
+  }
+
+  if (canUseCache) {
+    getCache.set(path, {
+      data,
+      timestamp: Date.now(),
+    })
+  } else if (options.method !== 'GET') {
+    invalidateCache(path)
   }
 
   return data

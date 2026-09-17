@@ -5,13 +5,6 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './app.jsx'
 
 import { AuthProvider } from './context/authContext.jsx'
-import { ClientProvider } from './context/clientContext.jsx'
-import { DeliverableProvider } from './context/deliverableContext.jsx'
-import { NotificationProvider } from './context/notificationContext.jsx'
-import { ProjectProvider } from './context/projectContext.jsx'
-import { LeadProvider } from './context/leadContext.jsx'
-import { TaskProvider } from './context/taskContext.jsx'
-import { DocumentProvider } from './context/documentContext.jsx'
 
 import './index.css'
 
@@ -31,21 +24,7 @@ ReactDOM.createRoot(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <ProjectProvider>
-          <ClientProvider>
-            <DeliverableProvider>
-              <NotificationProvider>
-                <LeadProvider>
-                  <TaskProvider>
-                    <DocumentProvider>
-                      <App />
-                    </DocumentProvider>
-                  </TaskProvider>
-                </LeadProvider>
-              </NotificationProvider>
-            </DeliverableProvider>
-          </ClientProvider>
-        </ProjectProvider>
+        <App />
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
