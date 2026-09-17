@@ -21,5 +21,11 @@
         }
       ]
     }
-  ]
+  ],
+  "rewrites": [
+  {
+    "source": "/dashboard",
+    "destination": "/index.html"
+  }
+]
 }

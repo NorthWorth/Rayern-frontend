@@ -15,7 +15,7 @@
 // Bump CACHE_VERSION when you want to force all clients to discard
 // every cache on the next load (e.g. after a breaking asset change).
 
-const CACHE_VERSION = 'rayern-v2'
+const CACHE_VERSION = 'rayern-v3'
 
 const SHELL_CACHE = `${CACHE_VERSION}-shell`
 const ASSET_CACHE = `${CACHE_VERSION}-assets`
@@ -53,6 +53,17 @@ function isCacheable(response) {
   return response && response.ok && response.type === 'basic'
 }
 
+function isStaticFilePath(pathname) {
+  const lastSegment = pathname.split('/').pop() || ''
+
+  return (
+    pathname === '/robots.txt' ||
+    pathname === '/sitemap.xml' ||
+    pathname === '/manifest.webmanifest' ||
+    lastSegment.includes('.')
+  )
+}
+
 // Network-first with cached-shell fallback. Successful HTML is also
 // copied over the cached shell so the offline fallback never goes
 // stale across deploys.
@@ -62,13 +73,20 @@ async function handleNavigation(request) {
   try {
     const response = await fetch(request)
 
-    if (isCacheable(response)) {
+    if (response.ok && isCacheable(response)) {
       cache.put(SHELL_URL, response.clone())
+      return response
     }
 
-    return response
+    const shellResponse = await fetch(SHELL_URL)
+
+    if (isCacheable(shellResponse)) {
+      cache.put(SHELL_URL, shellResponse.clone())
+    }
+
+    return shellResponse
   } catch {
-    const cached = (await cache.match(request)) || (await cache.match(SHELL_URL))
+    const cached = await cache.match(SHELL_URL)
 
     if (cached) {
       return cached
@@ -142,7 +160,7 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  if (request.mode === 'navigate') {
+  if (request.mode === 'navigate' && !isStaticFilePath(url.pathname)) {
     event.respondWith(handleNavigation(request))
     return
   }
