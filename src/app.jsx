@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import './app.css'
 
 import ProtectedRoute from './components/routing/protectedRoute/protectedRoute.jsx'
@@ -37,8 +38,9 @@ import HomeRoute from './components/routing/homeRoute/homeRoute.jsx'
 
 function App() {
   return (
-    <Suspense fallback={<div className="route-loading">Loading Rayern...</div>}>
-      <Routes>
+    <>
+      <Suspense fallback={<div className="route-loading">Loading Rayern...</div>}>
+        <Routes>
       {/* Root entry */}
       <Route
         path="/"
@@ -187,8 +189,10 @@ function App() {
         />
         </Route>
       </Route>
-      </Routes>
-    </Suspense>
+        </Routes>
+      </Suspense>
+      <Analytics />
+    </>
   )
 }
 
