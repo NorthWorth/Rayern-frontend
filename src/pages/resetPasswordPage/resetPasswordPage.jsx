@@ -12,6 +12,7 @@ export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams()
 
   const token = searchParams.get('token') || ''
+  const hasToken = Boolean(token.trim())
 
   const [form, setForm] = useState({
     password: '',
@@ -61,7 +62,7 @@ export default function ResetPasswordPage() {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    if (!token) {
+    if (!hasToken) {
       setError(
         'This password reset link is invalid. Please request a new one.',
       )
@@ -174,7 +175,32 @@ export default function ResetPasswordPage() {
               </div>
             </div>
 
-            {isReset ? (
+            {!hasToken ? (
+              <>
+                <div className={styles.formHeader}>
+                  <span className={styles.eyebrow}>
+                    Invalid link
+                  </span>
+
+                  <h2>
+                    Reset link not found
+                  </h2>
+
+                  <p>
+                    This password reset link is invalid or expired. Please request a new one.
+                  </p>
+                </div>
+
+                <button
+                  className={styles.submitButton}
+                  type="button"
+                  onClick={() => navigate('/forgot-password', { replace: true })}
+                >
+                  <ArrowLeft size={15} weight="bold" aria-hidden="true" />
+                  Request a new reset link
+                </button>
+              </>
+            ) : isReset ? (
               <>
                 <div
                   className={

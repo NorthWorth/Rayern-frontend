@@ -10,7 +10,6 @@ export default function ForgotPasswordPage() {
   const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
-  const [resetUrl, setResetUrl] = useState('')
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] =
     useState(false)
@@ -63,7 +62,9 @@ export default function ForgotPasswordPage() {
       const result =
         response?.data || response
 
-      setResetUrl(result?.resetUrl || '')
+      if (result?.error) {
+        throw new Error(result.error.message || 'Unable to submit your request right now.')
+      }
 
       setIsSubmitted(true)
     } catch (requestError) {
@@ -171,17 +172,6 @@ export default function ForgotPasswordPage() {
                     instructions will be sent.
                   </p>
 
-                  {resetUrl && (
-                    <p>
-                      Email delivery is not
-                      configured yet. Use this
-                      development reset link to
-                      continue:{' '}
-                      <a href={resetUrl}>
-                        Reset your password
-                      </a>
-                    </p>
-                  )}
                 </div>
 
                 <button
