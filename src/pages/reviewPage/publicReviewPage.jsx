@@ -94,11 +94,16 @@ export default function PublicReviewPage() {
   const [deliverable, setDeliverable] =
     useState(null)
 
+  // A missing token is knowable up front, so the invalid
+  // link state is derived from the route instead of being
+  // written from inside the effect.
   const [isLoading, setIsLoading] =
-    useState(true)
+    useState(() => Boolean(token))
 
   const [error, setError] =
-    useState('')
+    useState(() =>
+      token ? '' : 'This review link is invalid.',
+    )
 
   const [feedback, setFeedback] =
     useState('')
@@ -166,11 +171,6 @@ export default function PublicReviewPage() {
 
     if (token) {
       loadReview()
-    } else {
-      setError(
-        'This review link is invalid.',
-      )
-      setIsLoading(false)
     }
 
     return () => {
@@ -182,7 +182,40 @@ export default function PublicReviewPage() {
     openPublicReview,
   ])
 
-  const comments = useMemo(() => {
+  // The client reviews the SUBMITTED version: its images
+  // come from the submission payload, with graceful
+  // fallbacks for legacy records that predate versioning.
+  const images = useMemo(() => {
+    if (Array.isArray(deliverable?.images)) {
+      return deliverable.images.filter((image) => image?.secureUrl)
+    }
+
+    if (deliverable?.previewImage) {
+      return [{ publicId: null, secureUrl: deliverable.previewImage }]
+    }
+
+    return []
+  }, [deliverable])
+
+  const submissionId = deliverable?.submissionId ?? null
+  const submissionVersion = deliverable?.submissionVersion ?? null
+
+  const versionedFeedback = useMemo(() => {
+    if (!Array.isArray(deliverable?.versionedFeedback)) return []
+    return deliverable.versionedFeedback
+      .slice()
+      .sort((left, right) => new Date(left.createdAt ?? 0) - new Date(right.createdAt ?? 0))
+  }, [deliverable])
+
+  // Feedback shown to the client: the versioned record
+  // when the deliverable has submissions (so each note is
+  // tied to the version it concerns and team-only notes
+  // stay private), otherwise the legacy inline comments.
+  const visibleFeedback = useMemo(() => {
+    if (versionedFeedback.length > 0) {
+      return versionedFeedback
+    }
+
     if (!deliverable?.comments) {
       return []
     }
@@ -198,7 +231,9 @@ export default function PublicReviewPage() {
           right.createdAt ?? 0,
         ),
     )
-  }, [deliverable])
+  }, [deliverable, versionedFeedback])
+
+  const [isStale, setIsStale] = useState(false)
 
   const runAction = async (action) => {
     if (isSubmitting) {
@@ -219,15 +254,30 @@ export default function PublicReviewPage() {
 
       return data
     } catch (requestError) {
-      setMessage(
-        requestError?.message ||
-          'Something went wrong. Please try again.',
-      )
+      // The version the client was reviewing has been
+      // superseded.  Explain instead of acting on the
+      // wrong submission.
+      if (requestError?.code === 'STALE_SUBMISSION') {
+        setIsStale(true)
+        setMessage(
+          requestError.message ||
+            'A newer version of this deliverable is available. Please reload to review the latest submission.',
+        )
+      } else {
+        setMessage(
+          requestError?.message ||
+            'Something went wrong. Please try again.',
+        )
+      }
 
       return null
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const handleReload = () => {
+    window.location.reload()
   }
 
   const handleComment = async (
@@ -278,6 +328,7 @@ export default function PublicReviewPage() {
           await requestPublicChanges(
             token,
             trimmed,
+            submissionId,
           )
 
         setFeedback('')
@@ -295,6 +346,7 @@ export default function PublicReviewPage() {
       const data =
         await approvePublicDeliverable(
           token,
+          submissionId,
         )
 
       setMessage(
@@ -436,9 +488,20 @@ export default function PublicReviewPage() {
               styles.titleRow
             }
           >
-            <h1>
-              {deliverable.title}
-            </h1>
+            <div className={styles.titleText}>
+              <h1>
+                {deliverable.title}
+              </h1>
+
+              {submissionVersion && (
+                <span className={styles.versionTag}>
+                  Version {submissionVersion}
+                  {deliverable.submissionCount > 1
+                    ? ` of ${deliverable.submissionCount}`
+                    : ''}
+                </span>
+              )}
+            </div>
 
             <Badge
               tone={getStatusTone(
@@ -457,19 +520,29 @@ export default function PublicReviewPage() {
             </p>
           )}
 
-          {deliverable.previewImage && (
-            <div
-              className={
-                styles.previewImageWrap
-              }
-            >
-              <img
-                src={
-                  deliverable.previewImage
-                }
-                alt="Project preview"
-              />
+          {images.length > 0 ? (
+            <div className={styles.imageGallery}>
+              {images.map((image, index) => (
+                <a
+                  key={image.publicId || `img-${index}`}
+                  className={styles.imageItem}
+                  href={image.secureUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Open submitted image ${index + 1} full size`}
+                >
+                  <img
+                    src={image.secureUrl}
+                    alt={`Submitted attachment ${index + 1}`}
+                    loading="lazy"
+                  />
+                </a>
+              ))}
             </div>
+          ) : (
+            <p className={styles.noImages}>
+              No images were attached to this submission.
+            </p>
           )}
 
           {deliverable.description && (
@@ -537,14 +610,26 @@ export default function PublicReviewPage() {
         </section>
 
         {message && (
-          <p
+          <div
             className={
-              styles.statusNotice
+              isStale
+                ? `${styles.statusNotice} ${styles.statusNoticeWarning}`
+                : styles.statusNotice
             }
             role="status"
           >
-            {message}
-          </p>
+            <span>{message}</span>
+
+            {isStale && (
+              <button
+                type="button"
+                className={styles.reloadButton}
+                onClick={handleReload}
+              >
+                Load latest version
+              </button>
+            )}
+          </div>
         )}
 
         <section
@@ -748,12 +833,12 @@ export default function PublicReviewPage() {
                     styles.commentCount
                   }
                 >
-                  ({comments.length})
+                  ({visibleFeedback.length})
                 </span>
               </h2>
             </div>
 
-            {comments.length === 0 ? (
+            {visibleFeedback.length === 0 ? (
               <div
                 className={
                   styles.emptyFeedback
@@ -774,7 +859,7 @@ export default function PublicReviewPage() {
                   styles.commentList
                 }
               >
-                {comments.map(
+                {visibleFeedback.map(
                   (comment) => (
                     <li
                       className={

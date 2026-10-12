@@ -33,6 +33,7 @@ const ForgotPasswordPage = lazy(() => import('./pages/forgotPasswordPage/forgotP
 const ResetPasswordPage = lazy(() => import('./pages/resetPasswordPage/resetPasswordPage.jsx'))
 const NotificationSettingsPage = lazy(() => import('./pages/notificationSettingsPage/notificationSettingsPage.jsx'))
 const AdminWaitlistPage = lazy(() => import('./pages/adminWaitlistPage/adminWaitlistPage.jsx'))
+const ActionCenterPage = lazy(() => import('./pages/actionCenterPage/actionCenterPage.jsx'))
 
 import HomeRoute from './components/routing/homeRoute/homeRoute.jsx'
 
@@ -181,6 +182,11 @@ function App() {
         <Route
           path="/admin/waitlist"
           element={<AdminWaitlistPage />}
+        />
+
+        <Route
+          path="/action-center"
+          element={<ActionCenterPage />}
         />
 
         <Route

@@ -95,11 +95,17 @@
   line-height: 1.7;
 }
 
-/* Content */
+/* Content
+
+   The page stacks two full-width panels (the review
+   decision and the review comments), so the grid is a
+   single column.  The earlier two-column template left
+   a permanently empty 330px column beside the one
+   panel it contained. */
 
 .contentGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 330px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: start;
 }
@@ -272,6 +278,10 @@
 /* Notices */
 
 .statusNotice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   margin: 0 0 20px;
   padding: 12px 14px;
   border: 1px solid #c7d2fe;
@@ -280,6 +290,36 @@
   color: #3730a3;
   font-size: 0.82rem;
   line-height: 1.5;
+}
+
+.statusNoticeWarning {
+  border-color: #fcd34d;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.reloadButton {
+  min-height: 34px;
+  margin-left: auto;
+  padding: 0 13px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.reloadButton:hover {
+  background: rgba(146, 64, 14, 0.1);
+}
+
+.reloadButton:focus-visible {
+  outline: 3px solid rgba(146, 64, 14, 0.35);
+  outline-offset: 2px;
 }
 
 /* State */
@@ -538,4 +578,127 @@
     height: 34px;
   }
 
+}
+
+/* =========================================================
+   Submitted version: identity + image collection
+   ========================================================= */
+
+.titleText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.versionTag {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* A text-only deliverable must still read as complete,
+   not as a broken image slot. */
+.noImages {
+  margin: 18px 0 0;
+  padding: 16px 18px;
+  border: 1px dashed #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #94a3b8;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.imageGallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 20px 0 0;
+  max-width: 760px;
+}
+
+.imageItem {
+  display: block;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f8fafc;
+  cursor: zoom-in;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.imageItem:hover {
+  border-color: #312e81;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.imageItem:focus-visible {
+  outline: 3px solid rgba(49, 46, 129, 0.35);
+  outline-offset: 2px;
+}
+
+.imageItem img {
+  display: block;
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+/* =========================================================
+   Accessibility + long-content safety
+   ========================================================= */
+
+.primaryButton:focus-visible,
+.secondaryButton:focus-visible,
+.feedbackForm textarea:focus-visible {
+  outline: 3px solid rgba(49, 46, 129, 0.35);
+  outline-offset: 2px;
+}
+
+.feedbackForm textarea:focus-visible {
+  border-color: #312e81;
+}
+
+.titleRow h1,
+.description,
+.comment p,
+.actionCopy p {
+  overflow-wrap: anywhere;
+}
+
+/* Comment bodies must not stretch into unreadably long
+   lines on wide screens. */
+.comment p,
+.actionCopy p {
+  max-width: 78ch;
+}
+
+@media (max-width: 640px) {
+  .imageGallery {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+
+  .imageItem img {
+    height: 150px;
+  }
+
+  .statusNotice {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reloadButton {
+    margin-left: 0;
+  }
 }

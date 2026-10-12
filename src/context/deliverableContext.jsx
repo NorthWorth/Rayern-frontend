@@ -184,80 +184,83 @@ export function DeliverableProvider({
     [updateDeliverable],
   )
 
-  const approveDeliverable =
-    useCallback(
-      async (id) => {
-        return updateDeliverable(id, {
-          status: 'Approved',
-        })
-      },
-      [updateDeliverable],
-    )
-
-  const addReviewComment =
-    useCallback(
-      async (
-        id,
-        content,
-        authorType = 'user',
-        authorName = '',
-      ) => {
-        setError('')
-
-        const data = await api.post(
-          `/deliverables/${id}/comments`,
-          {
-            content,
-            authorType,
-            authorName,
-          },
-        )
-
-        const updatedDeliverable =
-          data.deliverable
-
-        setDeliverables((current) =>
-          current.map((item) =>
-            item._id === id ||
-            item.id === id
-              ? updatedDeliverable
-              : item,
-          ),
-        )
-
-        return updatedDeliverable
-      },
-      [],
-    )
-
-  const requestChanges = useCallback(
-    async (id, comment) => {
-      await addReviewComment(
-        id,
-        comment,
-        'user',
-        '',
-      )
-
-      return updateDeliverable(id, {
-        status: 'Changes Requested',
-      })
-    },
-    [
-      addReviewComment,
-      updateDeliverable,
-    ],
-  )
-
-  const createReviewAccess =
-    useCallback(async (id, expiresAt) => {
+  const addReviewComment = useCallback(
+    async (
+      id,
+      content,
+      authorType = 'user',
+      authorName = '',
+    ) => {
       setError('')
 
       const data = await api.post(
+        `/deliverables/${id}/comments`,
+        {
+          content,
+          authorType,
+          authorName,
+        },
+      )
+
+      const updatedDeliverable =
+        data.deliverable
+
+      setDeliverables((current) =>
+        current.map((item) =>
+          item._id === id ||
+          item.id === id
+            ? updatedDeliverable
+            : item,
+        ),
+      )
+
+      return updatedDeliverable
+    },
+    [],
+  )
+
+  const requestChanges = useCallback(
+    async (id, comment) => {
+      setError('')
+
+      const data = await api.post(
+        `/deliverables/${id}/request-changes`,
+        { content: comment },
+      )
+
+      const updatedDeliverable =
+        data.deliverable
+
+      setDeliverables((current) =>
+        current.map((item) =>
+          item._id === id ||
+          item.id === id
+            ? updatedDeliverable
+            : item,
+        ),
+      )
+
+      return updatedDeliverable
+    },
+    [],
+  )
+
+  const createReviewAccess =
+    useCallback(async (id, expiresAt, options = {}) => {
+      setError('')
+
+      // Review tokens are stored hash-only, so an existing active
+      // link cannot be re-displayed. `rotate: true` explicitly
+      // replaces it with a new one (invalidating the previous link).
+      const payload = expiresAt ? { expiresAt } : {}
+
+      if (options.rotate) {
+        payload.rotate = true
+      }
+
+      const data = await api.post(
         `/deliverables/${id}/review-access`,
-        expiresAt
-          ? { expiresAt }
-          : {},
+        payload,
       )
 
       return data
@@ -296,22 +299,26 @@ export function DeliverableProvider({
 
   const requestPublicChanges =
     useCallback(
-      async (token, content) => {
+      async (token, content, submissionId) => {
         return api.post(
           `/public-review/${encodeURIComponent(
             token,
           )}/request-changes`,
-          { content },
+          submissionId
+            ? { content, submissionId }
+            : { content },
         )
-      }, [],
+      },
+      [],
     )
 
   const approvePublicDeliverable =
-    useCallback(async (token) => {
+    useCallback(async (token, submissionId) => {
       return api.post(
         `/public-review/${encodeURIComponent(
           token,
         )}/approve`,
+        submissionId ? { submissionId } : {},
       )
     }, [])
 
@@ -341,11 +348,14 @@ export function DeliverableProvider({
   )
 
   const removePreviewImage = useCallback(
-    async (id) => {
+    async (id, publicId) => {
       setError('')
 
       const data = await api.delete(
         `/deliverables/${id}/preview-image`,
+        {
+          body: JSON.stringify({ publicId }),
+        },
       )
 
       const updatedDeliverable =
@@ -382,7 +392,6 @@ export function DeliverableProvider({
 
     submitForReview,
     startReview,
-    approveDeliverable,
     requestChanges,
     addReviewComment,
 

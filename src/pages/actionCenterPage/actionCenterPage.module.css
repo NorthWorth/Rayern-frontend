@@ -1,0 +1,253 @@
+.loading {
+  padding: 24px 0;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 1px solid #fecaca;
+  border-radius: 14px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.88rem;
+}
+
+.error svg {
+  flex-shrink: 0;
+}
+
+.allClear {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  color: #15803d;
+}
+
+.allClear svg {
+  flex-shrink: 0;
+}
+
+.allClear h3 {
+  margin: 0 0 4px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.allClear p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.sections {
+  display: grid;
+  gap: 20px;
+}
+
+.section {
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.sectionEyebrow {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.section h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.sectionCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--primary-strong);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.sectionDesc {
+  margin: 0 0 14px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.itemList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.item {
+  width: 100%;
+}
+
+.itemButton {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.itemButton:hover:not(:disabled) {
+  border-color: var(--primary-strong);
+  background: #eef2ff;
+  transform: translateY(-1px);
+}
+
+.itemButton:focus-visible {
+  outline: 3px solid rgb(79 70 229 / 18%);
+  outline-offset: 2px;
+}
+
+.itemButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.itemIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--surface-muted);
+  color: var(--primary-strong);
+  flex-shrink: 0;
+}
+
+.itemBody {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.itemTitle {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.itemStatus {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.itemReason {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.itemDate {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.itemChevron {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+.emptyBucket {
+  padding: 24px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: var(--surface-muted);
+}
+
+@media (max-width: 700px) {
+  .section {
+    padding: 18px;
+  }
+
+  .itemButton {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .itemChevron {
+    display: none;
+  }
+
+  .sectionCount {
+    min-width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    padding: 0 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .itemTitle {
+    white-space: normal;
+  }
+
+  .itemDate {
+    display: block;
+    margin-top: 4px;
+  }
+}

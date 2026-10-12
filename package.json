@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:review": "node scripts/publicReviewRender.test.mjs && node scripts/reviewFlow.test.mjs",
+    "test:headers": "node scripts/securityHeaders.test.mjs",
+    "test": "npm run test:review && npm run test:headers"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
