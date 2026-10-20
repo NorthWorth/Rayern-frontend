@@ -25,6 +25,8 @@ const BillingPage = lazy(() => import('./pages/billingsPage/billingsPage.jsx'))
 const NotificationsPage = lazy(() => import('./pages/notificationsPage/notificationsPage.jsx'))
 const ProfileSettingsPage = lazy(() => import('./pages/profileSettingsPage/profileSettingsPage.jsx'))
 const WorkspaceSettingsPage = lazy(() => import('./pages/workspaceSettingsPage/workspaceSettingsPage.jsx'))
+const MeetingsPage = lazy(() => import('./pages/meetingsPage/meetingsPage.jsx'))
+const MeetingProvider = lazy(() => import('./context/meetingContext.jsx'))
 const ProjectProfilePage = lazy(() => import('./pages/projectProfilePage/projectProfilePage.jsx'))
 const TaskProfilePage = lazy(() => import('./pages/taskProfilePage/taskProfilePage.jsx'))
 const LoginPage = lazy(() => import('./pages/loginPage/loginPage.jsx'))
@@ -131,7 +133,13 @@ function App() {
 
         <Route
           path="/meetings"
-          element={<ComingSoonPage />}
+          element={
+            <Suspense fallback={<div className="route-loading">Loading meetings...</div>}>
+              <MeetingProvider>
+                <MeetingsPage />
+              </MeetingProvider>
+            </Suspense>
+          }
         />
 
         <Route

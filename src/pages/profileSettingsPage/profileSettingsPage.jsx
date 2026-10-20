@@ -1,30 +1,96 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../../context/authContext.jsx'
+import api from '../../api/apiClient.js'
 import PageLayout from '../../components/layout/pageLayout/pageLayout.jsx'
 import PageSection from '../../components/ui/pageSection/pageSection.jsx'
 import Avatar from '../../components/ui/avatar/avatar.jsx'
 import Toast from '../../components/ui/toast/toast.jsx'
 import styles from './profileSettingsPage.module.css'
 
+const EMPTY_FORM = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  timezone: 'Africa/Lagos',
+}
+
+const SUPPORTED_TIMEZONES = [
+  'Africa/Lagos',
+  'Europe/London',
+  'America/New_York',
+  'America/Los_Angeles',
+]
+
 export default function ProfileSettingsPage() {
   const navigate = useNavigate()
-  const { logout } = useAuth()
+  const { user, logout } = useAuth()
 
-  const [isSigningOut, setIsSigningOut] =
-    useState(false)
+  const [isSigningOut, setIsSigningOut] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
-  const [form, setForm] = useState({
-    firstName: 'Russell',
-    lastName: 'Eshiet',
-    email: 'russell@example.com',
-    role: 'Frontend Developer',
-    phone: '',
-    timezone: 'Africa/Lagos',
-  })
+  const [form, setForm] = useState(() => ({
+    ...EMPTY_FORM,
+    ...(user
+      ? {
+          firstName: user.firstName ?? '',
+          lastName: user.lastName ?? '',
+          email: user.email ?? '',
+        }
+      : {}),
+  }))
 
-  const [toast, setToast] = useState('');
+  const [serverUser, setServerUser] = useState(null)
+  const [toast, setToast] = useState('')
+
+  useEffect(() => {
+    if (!user) {
+      return
+    }
+
+    let active = true
+
+    api
+      .get('/auth/me')
+      .then((response) => {
+        if (!active) {
+          return
+        }
+
+        const profile = response?.data?.user
+
+        if (!profile) {
+          throw new Error('Invalid session response.')
+        }
+
+        setServerUser(profile)
+        setForm((current) => ({
+          ...current,
+          firstName: profile.firstName ?? '',
+          lastName: profile.lastName ?? '',
+          email: profile.email ?? '',
+        }))
+      })
+      .catch(() => {
+        if (!active) {
+          return
+        }
+
+        setServerUser(null)
+        setForm((current) => ({
+          ...current,
+          firstName: '',
+          lastName: '',
+          email: '',
+        }))
+      })
+
+    return () => {
+      active = false
+    }
+  }, [user])
 
   const change = (event) => {
     const { name, value } = event.target
@@ -35,17 +101,55 @@ export default function ProfileSettingsPage() {
     }))
   }
 
-  const saveProfile = (event) => {
+  const handleSave = async (event) => {
     event.preventDefault()
-    setToast('Saving profile changes will be available once account updates are connected.')
+
+    if (isSaving) {
+      return
+    }
+
+    setIsSaving(true)
+    setToast('')
+
+    try {
+      const response = await api.patch('/profile', {
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+      })
+
+      const updated = response?.data?.user
+
+      if (!updated) {
+        throw new Error('Invalid profile response.')
+      }
+
+      setServerUser(updated)
+      setForm((current) => ({
+        ...current,
+        firstName: updated.firstName ?? '',
+        lastName: updated.lastName ?? '',
+      }))
+
+      setToast('Profile changes saved.')
+    } catch (requestError) {
+      setToast(
+        requestError?.message || 'Unable to save profile changes.'
+      )
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const handlePasswordChange = () => {
-    setToast('Password management will be connected to authentication later.')
+    setToast(
+      'Password changes are managed separately. Use Sign out and sign in again if you need a different account.'
+    )
   }
 
   const handleSignOut = async () => {
-    if (isSigningOut) return
+    if (isSigningOut) {
+      return
+    }
 
     setIsSigningOut(true)
 
@@ -56,6 +160,11 @@ export default function ProfileSettingsPage() {
     })
   }
 
+  const isLoading =
+    !serverUser && user && !isSaving && !isSigningOut
+
+  const verified = serverUser?.emailVerified === true
+
   return (
     <PageLayout
       title="Profile"
@@ -63,7 +172,6 @@ export default function ProfileSettingsPage() {
     >
       <PageSection>
         <div className={styles.page}>
-
           <section className={styles.profileHero}>
             <div className={styles.identity}>
               <Avatar
@@ -78,21 +186,32 @@ export default function ProfileSettingsPage() {
                 </span>
 
                 <h2>
-                  {form.firstName} {form.lastName}
+                  {form.firstName || '—'} {form.lastName || ''}
                 </h2>
 
-                <p>{form.email}</p>
+                <p>{form.email || '—'}</p>
               </div>
             </div>
 
-            <div className={styles.accountBadge}>
-              <span className={styles.statusDot} />
-              Active account
-            </div>
+            {isLoading ? (
+              <div className={styles.accountBadgeLoading}>
+                <span className={styles.statusDotPulse} />
+                Loading
+              </div>
+            ) : verified ? (
+              <div className={styles.accountBadge}>
+                <span className={styles.statusDot} />
+                Email verified
+              </div>
+            ) : (
+              <div className={styles.accountBadgeUnverified}>
+                <span className={styles.statusDotMuted} />
+                Email not verified
+              </div>
+            )}
           </section>
 
-          <form onSubmit={saveProfile}>
-
+          <form onSubmit={handleSave}>
             <section className={styles.section}>
               <div className={styles.sectionHeader}>
                 <div>
@@ -121,6 +240,7 @@ export default function ProfileSettingsPage() {
                     value={form.firstName}
                     onChange={change}
                     placeholder="First name"
+                    required
                   />
                 </div>
 
@@ -135,6 +255,7 @@ export default function ProfileSettingsPage() {
                     value={form.lastName}
                     onChange={change}
                     placeholder="Last name"
+                    required
                   />
                 </div>
 
@@ -150,7 +271,13 @@ export default function ProfileSettingsPage() {
                     value={form.email}
                     onChange={change}
                     placeholder="you@example.com"
+                    disabled
                   />
+
+                  <span className={styles.helpText}>
+                    Email is managed separately. Change it
+                    from the account security section.
+                  </span>
                 </div>
 
                 <div className={styles.field}>
@@ -165,6 +292,10 @@ export default function ProfileSettingsPage() {
                     onChange={change}
                     placeholder="Optional"
                   />
+
+                  <span className={styles.helpText}>
+                    Saved locally for now.
+                  </span>
                 </div>
 
                 <div className={styles.field}>
@@ -179,6 +310,10 @@ export default function ProfileSettingsPage() {
                     onChange={change}
                     placeholder="Your role"
                   />
+
+                  <span className={styles.helpText}>
+                    Saved locally for now.
+                  </span>
                 </div>
 
                 <div className={styles.field}>
@@ -192,22 +327,16 @@ export default function ProfileSettingsPage() {
                     value={form.timezone}
                     onChange={change}
                   >
-                    <option value="Africa/Lagos">
-                      Africa/Lagos
-                    </option>
-
-                    <option value="Europe/London">
-                      Europe/London
-                    </option>
-
-                    <option value="America/New_York">
-                      America/New_York
-                    </option>
-
-                    <option value="America/Los_Angeles">
-                      America/Los_Angeles
-                    </option>
+                    {SUPPORTED_TIMEZONES.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
                   </select>
+
+                  <span className={styles.helpText}>
+                    Saved locally for now.
+                  </span>
                 </div>
               </div>
 
@@ -215,12 +344,12 @@ export default function ProfileSettingsPage() {
                 <button
                   className="primary-btn"
                   type="submit"
+                  disabled={isSaving}
                 >
-                  Save changes
+                  {isSaving ? 'Saving...' : 'Save changes'}
                 </button>
               </div>
             </section>
-
           </form>
 
           <section className={styles.section}>
@@ -240,7 +369,6 @@ export default function ProfileSettingsPage() {
             </div>
 
             <div className={styles.securityList}>
-
               <div className={styles.securityItem}>
                 <div>
                   <strong>Password</strong>
@@ -263,16 +391,19 @@ export default function ProfileSettingsPage() {
                 <div>
                   <strong>Email address</strong>
 
-                  <span>
-                    {form.email}
-                  </span>
+                  <span>{form.email || '—'}</span>
                 </div>
 
-                <span className={styles.verifiedBadge}>
-                  Verified
-                </span>
+                {verified ? (
+                  <span className={styles.verifiedBadge}>
+                    Verified
+                  </span>
+                ) : (
+                  <span className={styles.unverifiedBadge}>
+                    Not verified
+                  </span>
+                )}
               </div>
-
             </div>
           </section>
 
@@ -337,12 +468,9 @@ export default function ProfileSettingsPage() {
               onClick={handleSignOut}
               disabled={isSigningOut}
             >
-              {isSigningOut
-                ? 'Signing out...'
-                : 'Sign out'}
+              {isSigningOut ? 'Signing out...' : 'Sign out'}
             </button>
           </section>
-
         </div>
       </PageSection>
 

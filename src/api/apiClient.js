@@ -7,7 +7,7 @@ import {
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  'https://rayern-backend.onrender.com/api/v1'
+  '/api/v1'
 
 const GET_CACHE_TTL = 30 * 1000
 const getCache = new Map()

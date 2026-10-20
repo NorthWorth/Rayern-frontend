@@ -4,6 +4,7 @@ import { ClientProvider } from '../../../context/clientContext.jsx'
 import { DeliverableProvider } from '../../../context/deliverableContext.jsx'
 import { DocumentProvider } from '../../../context/documentContext.jsx'
 import { LeadProvider } from '../../../context/leadContext.jsx'
+import { MeetingProvider } from '../../../context/meetingContext.jsx'
 import { NotificationProvider } from '../../../context/notificationContext.jsx'
 import { ProjectProvider } from '../../../context/projectContext.jsx'
 import { TaskProvider } from '../../../context/taskContext.jsx'
@@ -27,6 +28,7 @@ export default function RouteDataProviders() {
   const isDocuments = pathname === '/documents'
   const isDeliverables = pathname === '/deliverables'
   const isReview = pathname.startsWith('/review/')
+  const isMeetings = pathname === '/meetings'
 
   if (isDashboard || isClients || isClientProfile || isProjects || isProjectProfile) {
     content = withProvider(content, ClientProvider)
@@ -50,6 +52,10 @@ export default function RouteDataProviders() {
 
   if (isDocuments) {
     content = withProvider(content, DocumentProvider)
+  }
+
+  if (isMeetings) {
+    content = withProvider(content, MeetingProvider)
   }
 
   return withProvider(content, NotificationProvider)

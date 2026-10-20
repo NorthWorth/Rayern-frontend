@@ -77,6 +77,66 @@
   background: #22c55e;
 }
 
+.accountBadgeLoading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.statusDotPulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #94a3b8;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.accountBadgeUnverified {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #fef9c3;
+  color: #854d0e;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.statusDotMuted {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #eab308;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.unverifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fef9c3;
+  color: #854d0e !important;
+  font-size: 0.72rem !important;
+  font-weight: 800;
+}
+
+
 .section {
   display: grid;
   gap: 24px;
@@ -187,8 +247,7 @@
   font-size: 0.82rem;
 }
 
-.verifiedBadge,
-.currentSession {
+.verifiedBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -200,6 +259,7 @@
   font-size: 0.72rem !important;
   font-weight: 800;
 }
+
 
 .sessionCard {
   display: flex;
