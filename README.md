@@ -1,16 +1,43 @@
-# React + Vite
+# Required environment variables for the Rayern frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## API base URL
 
-Currently, two official plugins are available:
+The client calls the Rayern backend API directly (it is not proxied through the
+Vite dev server in production). The backend origin is resolved at build time by
+`VITE_API_URL`, and the client appends the API version prefix `/api/v1` to every
+request.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Do **not** include `/api/v1` in `VITE_API_URL` itself. If you do, requests will
+be sent to `.../api/v1/api/v1/...` and return 404.
 
-## React Compiler
+### Production
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+VITE_API_URL=https://rayern-backend.onrender.com
+```
 
-## Expanding the ESLint configuration
+This must be set in the production build/deploy environment so the built bundle
+requests the real backend origin. If this is not set, the client falls back to
+the same backend origin and still appends `/api/v1` itself, so a missing variable
+no longer causes relative-path requests against the frontend origin.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Local development
+
+For local development against a self-hosted backend:
+
+```
+VITE_API_URL=http://localhost:5000
+```
+
+With that set, `npm run dev` will request `http://localhost:5000/api/v1/...`.
+
+## Notes
+
+- The origin is baked into the static build; changing it requires a new build and
+  deploy, not just a runtime env change.
+- The `/api/v1` prefix is appended by the shared client in
+  `client/src/api/apiClient.js` and is not configurable per-request.
+- Edit `client/src/api/apiClient.js` only if you intentionally want to change
+  the backend origin or the API path convention. The canonical backend paths are
+  defined by the Express route tree in `server/src/routes/index.js` and each
+  feature router under `server/src/routes/`.

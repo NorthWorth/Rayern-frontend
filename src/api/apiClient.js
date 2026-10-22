@@ -7,7 +7,7 @@ import {
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  '/api/v1'
+  'https://rayern-backend.onrender.com'
 
 const GET_CACHE_TTL = 30 * 1000
 const getCache = new Map()
@@ -19,7 +19,7 @@ migrateLegacySessionKeys()
 
 // Shared in-flight refresh promise so that
 // concurrent 401s trigger exactly ONE
-// /auth/refresh request.
+// /api/v1/auth/refresh request.
 let refreshPromise = null
 
 function isCacheableGet(path, options, token) {
@@ -91,7 +91,7 @@ async function performRefresh(retriedStale = false) {
   }
 
   const response = await fetch(
-    `${API_URL}/auth/refresh`,
+    `${API_URL}/api/v1/auth/refresh`,
     {
       method: 'POST',
       headers: {
@@ -175,7 +175,7 @@ async function performRefresh(retriedStale = false) {
 // Shared single-flight entry point. AuthContext
 // awaits this same promise during session
 // restoration so concurrent 401s from data
-// providers and /auth/me trigger exactly one
+// providers and /api/v1/auth/me trigger exactly one
 // rotating refresh instead of racing.
 export function refreshAccessToken() {
   if (!refreshPromise) {
@@ -258,7 +258,7 @@ async function request(
   delete fetchOptions.rawBody
 
   const response = await fetch(
-    `${API_URL}${path}`,
+    `${API_URL}/api/v1${path}`,
     {
       ...fetchOptions,
       headers,
