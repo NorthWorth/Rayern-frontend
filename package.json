@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test:review": "node scripts/publicReviewRender.test.mjs && node scripts/reviewFlow.test.mjs",
     "test:headers": "node scripts/securityHeaders.test.mjs",
-    "test": "npm run test:review && npm run test:headers"
+    "test:attribution": "node scripts/attribution.test.mjs",
+    "test": "npm run test:review && npm run test:headers && npm run test:attribution"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

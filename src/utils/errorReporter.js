@@ -21,9 +21,24 @@
 // never reports failures of its own endpoint (no loops); sending is
 // fire-and-forget and must never throw into app code.
 
-const API_BASE =
-  import.meta.env.VITE_API_URL ||
-  'https://rayern-backend.onrender.com'
+// VITE_API_URL is inlined by Vite at build time. It is read inside a
+// try so the literal `import.meta.env.VITE_API_URL` still gets
+// replaced during the build, while importing this module outside Vite
+// (a plain Node test) throws here instead of at module load and falls
+// back to the documented default.
+function resolveApiBase() {
+  try {
+    const configured = import.meta.env.VITE_API_URL
+
+    if (configured) return configured
+  } catch {
+    // Not bundled by Vite — use the default base below.
+  }
+
+  return 'https://rayern-backend.onrender.com'
+}
+
+const API_BASE = resolveApiBase()
 
 const REPORT_PATH = '/api/v1/telemetry/client-errors'
 
@@ -46,14 +61,17 @@ function sessionCount() {
   }
 }
 
+// Increments the PERSISTED count and stores the result. Persisting the
+// in-memory counter (rather than storage + 1) reset the stored value
+// to 1 on every reload, because inMemoryCount starts at 0 again after
+// a reload — so the per-session cap never actually held.
 function bumpSessionCount() {
-  inMemoryCount += 1
+  const next = sessionCount() + 1
+
+  inMemoryCount = next
 
   try {
-    sessionStorage.setItem(
-      SESSION_COUNT_KEY,
-      String(inMemoryCount),
-    )
+    sessionStorage.setItem(SESSION_COUNT_KEY, String(next))
   } catch {
     // Storage unavailable (private mode) — in-memory bound applies.
   }
