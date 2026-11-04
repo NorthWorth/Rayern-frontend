@@ -16,6 +16,7 @@ import {
   USER_KEY,
   SESSION_EXPIRED_EVENT,
 } from '../utils/sessionKeys.js'
+import { getRegistrationAttribution } from '../utils/attribution.js'
 
 const AuthContext = createContext(null)
 
@@ -275,6 +276,10 @@ export function AuthProvider({ children }) {
     password,
     workspaceName,
   }) => {
+    // First-party acquisition attribution (captured on entry).
+    // Optional server-side: when null the payload simply omits it.
+    const attribution = getRegistrationAttribution()
+
     const response = await api.post(
       '/auth/register',
       {
@@ -283,6 +288,7 @@ export function AuthProvider({ children }) {
         email,
         password,
         workspaceName,
+        ...(attribution ? { attribution } : {}),
       },
     )
 

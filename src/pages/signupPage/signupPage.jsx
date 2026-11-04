@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import {
   Link,
   useLocation,
@@ -7,12 +7,19 @@ import {
 import { Eye, EyeSlash, Check } from '@phosphor-icons/react'
 
 import { useAuth } from '../../context/authContext.jsx'
+import { recordSignupIntent } from '../../utils/attribution.js'
 
 import styles from './signupPage.module.css'
 
 export default function SignupPage() {
   const navigate = useNavigate()
   const location = useLocation()
+
+  // Funnel instrumentation: the signup page was reached. Once per
+  // browser session, fire-and-forget (see utils/attribution.js).
+  useEffect(() => {
+    recordSignupIntent()
+  }, [])
 
   const { signup } = useAuth()
 

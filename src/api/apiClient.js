@@ -4,10 +4,18 @@ import {
   SESSION_EXPIRED_EVENT,
   migrateLegacySessionKeys,
 } from '../utils/sessionKeys.js'
+import {
+  reportApiFailure,
+  validateApiConfig,
+} from '../utils/errorReporter.js'
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
   'https://rayern-backend.onrender.com'
+
+// An unusable API base URL is a reportable configuration problem —
+// surfaces in the dashboard even before any request is attempted.
+validateApiConfig(API_URL)
 
 const GET_CACHE_TTL = 30 * 1000
 const getCache = new Map()
@@ -257,13 +265,47 @@ async function request(
 
   delete fetchOptions.rawBody
 
-  const response = await fetch(
-    `${API_URL}/api/v1${path}`,
-    {
-      ...fetchOptions,
-      headers,
-    },
-  )
+  let response
+
+  try {
+    response = await fetch(
+      `${API_URL}/api/v1${path}`,
+      {
+        ...fetchOptions,
+        headers,
+      },
+    )
+  } catch (fetchError) {
+    // Network-level failure: offline, DNS, CORS, connection reset.
+    reportApiFailure({
+      kind: 'network_error',
+      endpoint: path,
+      method: options.method || 'GET',
+      message: fetchError?.message,
+    })
+
+    throw fetchError
+  }
+
+  const methodLabel = options.method || 'GET'
+
+  // A JSON API answering with HTML is the classic signature of an
+  // incorrect API base URL (the request landed on a web server /
+  // proxy instead of the API). Reported once per path per session.
+  if (
+    !options.responseType &&
+    (response.headers.get('content-type') || '')
+      .toLowerCase()
+      .includes('text/html')
+  ) {
+    reportApiFailure({
+      kind: 'unexpected_response',
+      endpoint: path,
+      method: methodLabel,
+      status: response.status,
+      message: 'Expected JSON from the API but received HTML.',
+    })
+  }
 
   let data = null
 
@@ -306,6 +348,24 @@ async function request(
   }
 
   if (!response.ok) {
+    // Failed API request. 401 is excluded: the shared refresh flow
+    // owns it (an expired token is normal operation, not a failure
+    // worth reporting). Everything else — including 5xx and
+    // unexpected 4xx — is surfaced, bounded by the per-session cap.
+    if (
+      response.status !== 401 &&
+      !path.startsWith('/telemetry/')
+    ) {
+      reportApiFailure({
+        kind: 'api_error',
+        endpoint: path,
+        method: methodLabel,
+        status: response.status,
+        code: data?.error?.code,
+        message: data?.error?.message,
+      })
+    }
+
     let errorData = data
 
     if (options.responseType === 'blob' && !errorData) {
